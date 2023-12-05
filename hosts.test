@@ -1,0 +1,171 @@
+; Top group to define what kind of environment this is.
+; Examples of the group name are "production", "test" and so on.
+[production:children]
+local
+hadoop_all
+hadoop_pseudo
+kafka_cluster
+confluent_kafka_cluster
+manage
+data_loader
+endosnipe
+heapstats
+
+; This is a dummy
+[local]
+localhost
+
+; Top group of all nodes of each component
+; This group includes parent groups of each component
+[hadoop_all:children]
+hadoop_master
+hadoop_client
+hadoop_slave
+hadoop_hbase
+hadoop_spark
+
+; Parent group of master nodes 
+[hadoop_master:children]
+hadoop_namenode
+hadoop_journalnode
+hadoop_zookeeperserver
+hadoop_resourcemanager
+hadoop_other
+hadoop_httpfs
+
+; All of NameNodes
+[hadoop_namenode:children]
+hadoop_namenode_primary
+hadoop_namenode_backup
+
+; Primary NameNode
+; This group should have only one node.
+[hadoop_namenode_primary]
+192.168.1.198
+
+; Backup NameNode
+; This group should have only one node.
+[hadoop_namenode_backup]
+192.168.1.184
+
+; All of JournalNodes
+[hadoop_journalnode]
+192.168.1.198
+192.168.1.184
+192.168.1.173
+
+; All of Zookeeper nodes
+; Each node has a parameter configuration about Zookeeper ID
+[hadoop_zookeeperserver]
+192.168.1.198 zookeeper_server_id=1
+192.168.1.184 zookeeper_server_id=2
+192.168.1.173 zookeeper_server_id=3
+
+; All of ResourceManagers
+[hadoop_resourcemanager]
+192.168.1.198
+192.168.1.184
+
+; Node to provide misc services
+[hadoop_other]
+192.168.1.173
+
+; SlaveNodes
+[hadoop_slave]
+192.168.1.198
+192.168.1.184
+192.168.1.173
+
+; Used as a client of Hadoop
+[hadoop_client:children]
+hadoop_hive
+hadoop_oozie
+hadoop_pig
+
+[hadoop_hive]
+192.168.1.184
+
+[hadoop_oozie]
+192.168.1.184
+
+[hadoop_pig]
+192.168.1.184
+
+; Spark Standalone cluster
+; Sorry, Spark Standalone configuration is not implemented yet.
+[hadoop_spark:children]
+hadoop_spark_master
+hadoop_spark_worker
+
+[hadoop_spark_master]
+192.168.1.198
+
+[hadoop_spark_worker]
+192.168.1.198
+192.168.1.184
+192.168.1.173
+
+; Node to provide HttpFS service
+[hadoop_httpfs]
+192.168.1.198
+
+; Top group of HBase cluster
+; Sorry, HBase configuration is not implemented yet.
+[hadoop_hbase:children]
+hadoop_hbase_master
+hadoop_hbase_regionserver
+
+[hadoop_hbase_master]
+192.168.1.198
+
+[hadoop_hbase_regionserver]
+192.168.1.198
+192.168.1.184
+192.168.1.173
+
+[hadoop_pseudo]
+192.168.1.153
+
+[kafka_cluster]
+192.168.1.198 zookeeper_server_id=1 kafka_broker_id=1
+192.168.1.184 zookeeper_server_id=2 kafka_broker_id=2
+192.168.1.173 zookeeper_server_id=3 kafka_broker_id=3
+
+[confluent_kafka_cluster]
+192.168.1.198 zookeeper_server_id=1 confluent_kafka_broker_id=1
+192.168.1.184 zookeeper_server_id=2 confluent_kafka_broker_id=2
+192.168.1.173 zookeeper_server_id=3 confluent_kafka_broker_id=3
+
+; This servers should be different from Kafka brokers
+; because of separation of workdloads.
+[confluent_kafka_connect]
+192.168.1.153
+
+[confluent_schema_registry]
+192.168.1.198
+
+[confluent_kafka_rest]
+192.168.1.198
+
+[manage]
+manage
+
+[data_loader]
+192.168.1.198
+
+[endosnipe:children]
+endo_javelin
+endo_dashboard
+
+[endo_javelin]
+192.168.1.198
+192.168.1.184
+192.168.1.173
+
+[endo_dashboard]
+manage
+
+[heapstats]
+192.168.1.198
+192.168.1.184
+192.168.1.173

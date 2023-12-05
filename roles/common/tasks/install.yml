@@ -6,5 +6,5 @@
     - unzip
     - man
     - wget
-    - ntp
+    - chrony
     - python-pip
